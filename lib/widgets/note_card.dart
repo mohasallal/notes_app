@@ -6,7 +6,16 @@ import '../models/note.dart';
 class NoteCard extends StatelessWidget {
   final Note note;
 
-  const NoteCard({super.key, required this.note});
+  final VoidCallback onFavoritPressed;
+
+  final VoidCallback onDeletePressed;
+
+  const NoteCard({
+    super.key,
+    required this.note,
+    required this.onFavoritPressed,
+    required this.onDeletePressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +60,22 @@ class NoteCard extends StatelessWidget {
               ),
             ),
 
-            Icon(note.isFav ? Icons.favorite : Icons.favorite_border),
+            IconButton(
+              onPressed: onFavoritPressed,
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (child, animation) {
+                  return ScaleTransition(scale: animation, child: child);
+                },
+                child: Icon(
+                  note.isFav ? Icons.favorite : Icons.favorite_border,
+                  key: ValueKey(note.isFav),
+                  color: note.isFav ? Colors.red : null,
+                ),
+              ),
+            ),
+
+            IconButton(onPressed: onDeletePressed, icon: Icon(Icons.delete)),
           ],
         ),
       ),
